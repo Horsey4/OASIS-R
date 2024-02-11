@@ -7,9 +7,9 @@ public abstract class Interactable : MonoBehaviour
 {
     public LayerMask layerMask = ~(1 << 2);
     public float maxInteractionDistance = 1.0f;
-    private static Transform camera;
+    private protected static Transform playerCamera;
 
-    protected Interactable() => camera ??= GameObject.Find("PLAYER/Pivot/AnimPivot/Camera/FPSCamera").transform;
+    protected Interactable() => playerCamera ??= GameObject.Find("PLAYER/Pivot/AnimPivot/Camera/FPSCamera").transform;
 
     public bool IsMouseOver { get; private set; }
 
@@ -21,7 +21,7 @@ public abstract class Interactable : MonoBehaviour
 
     protected virtual void Update()
     {
-        if (Physics.Raycast(camera.position, camera.forward, out var hit, maxInteractionDistance, layerMask) && hit.transform == transform)
+        if (Physics.Raycast(playerCamera.position, playerCamera.forward, out var hit, maxInteractionDistance, layerMask) && hit.transform == transform)
         {
             if (!IsMouseOver)
             {
