@@ -9,8 +9,6 @@ public abstract class Interactable : MonoBehaviour
     public float maxInteractionDistance = 1.0f;
     private protected static Transform playerCamera;
 
-    protected Interactable() => playerCamera ??= GameObject.Find("PLAYER/Pivot/AnimPivot/Camera/FPSCamera").transform;
-
     public bool IsMouseOver { get; private set; }
 
     protected virtual void OnCursorEnter() { }
@@ -18,6 +16,8 @@ public abstract class Interactable : MonoBehaviour
     protected virtual void OnCursorOver() { }
 
     protected virtual void OnCursorExit() { }
+
+    protected virtual void Awake() => playerCamera ??= GameObject.Find("PLAYER/Pivot/AnimPivot/Camera/FPSCamera").transform;
 
     protected virtual void Update()
     {
