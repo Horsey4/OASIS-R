@@ -20,7 +20,17 @@ public abstract class Attachable : Interactable
 
     public int AttachedToIndex { get; private set; }
 
-    public virtual void Attach(int triggerIndex = 0, bool notify = true, bool silent = true)
+    public void Attach() => Attach(0, true, true);
+
+    public void Attach(int triggerIndex) => Attach(triggerIndex, true, true);
+
+    public void Attach(int triggerIndex, bool silent) => Attach(triggerIndex, silent, true);
+
+    public void Detach() => Detach(true, true);
+
+    public void Detach(bool silent) => Detach(silent, true);
+
+    public virtual void Attach(int triggerIndex, bool silent, bool notify)
     {
         if (IsAttached) throw new InvalidOperationException($"Object must be detached before {nameof(Attach)} is called.");
         if (triggerIndex < 0 || triggerIndex >= triggers.Length) throw new ArgumentOutOfRangeException(nameof(triggerIndex),
@@ -38,7 +48,7 @@ public abstract class Attachable : Interactable
         tag = "Untagged";
     }
 
-    public virtual void Detach(bool notify = true, bool silent = true)
+    public virtual void Detach(bool silent, bool notify)
     {
         if (!IsAttached) throw new InvalidOperationException($"Object must be attached before {nameof(Detach)} is called.");
 
@@ -60,7 +70,7 @@ public abstract class Attachable : Interactable
 
         if (Input.GetMouseButtonDown(0))
         {
-            Attach(inTriggerIndex, silent: silent);
+            Attach(inTriggerIndex, silent);
             inTriggerIndex = -1;
             CursorGUI.Assemble = false;
         }
@@ -73,7 +83,7 @@ public abstract class Attachable : Interactable
 
         if (Input.GetMouseButtonDown(1))
         {
-            Detach(silent: silent);
+            Detach(silent);
             CursorGUI.Disassemble = false;
         }
         else CursorGUI.Disassemble = true;
