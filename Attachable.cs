@@ -34,7 +34,7 @@ public abstract class Attachable : Interactable
     {
         if (IsAttached) throw new InvalidOperationException($"Object must be detached before {nameof(Attach)} is called.");
         if (triggerIndex < 0 || triggerIndex >= triggers.Length) throw new ArgumentOutOfRangeException(nameof(triggerIndex),
-            "Trigger index must be greater than zero and less than the total number of triggers.");
+            "Trigger index must be greater than or equal to zero and less than the total number of triggers.");
 
         if (!silent) MasterAudio.PlaySound3DAndForget("CarBuilding", sourceTrans: transform, variationName: "assemble");
         AttachedToIndex = triggerIndex;
