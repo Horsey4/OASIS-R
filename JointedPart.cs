@@ -17,7 +17,7 @@ public abstract class JointedPart<TJoint> : Attachable
         base.Attach(triggerIndex, silent, notify);
 
         Joint = gameObject.AddComponent<TJoint>();
-        Joint.connectedBody = transform.parent.GetComponentInParent<Rigidbody>();
+        InitJoint();
     }
 
     public override void Detach(bool silent, bool notify)
@@ -26,6 +26,8 @@ public abstract class JointedPart<TJoint> : Attachable
 
         Destroy(Joint);
     }
+
+    protected virtual void InitJoint() => Joint.connectedBody = transform.parent.GetComponentInParent<Rigidbody>();
 
     protected virtual void OnJointBreak(float breakForce)
     {
