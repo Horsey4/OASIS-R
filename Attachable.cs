@@ -36,7 +36,6 @@ public abstract class Attachable : Interactable
         if (triggerIndex < 0 || triggerIndex >= triggers.Length) throw new ArgumentOutOfRangeException(nameof(triggerIndex),
             "Trigger index must be greater than zero and less than the total number of triggers.");
 
-        if (notify) OnAttached?.Invoke(triggerIndex);
         if (!silent) MasterAudio.PlaySound3DAndForget("CarBuilding", sourceTrans: transform, variationName: "assemble");
         AttachedToIndex = triggerIndex;
         AttachedToCollider.enabled = false;
@@ -46,13 +45,14 @@ public abstract class Attachable : Interactable
         transform.localRotation = Quaternion.identity;
         cachedTag = (tag == "Untagged") ? "PART" : tag;
         tag = "Untagged";
+        if (notify) OnAttached?.Invoke(triggerIndex);
     }
 
     public virtual void Detach(bool silent, bool notify)
     {
         if (!IsAttached) throw new InvalidOperationException($"Object must be attached before {nameof(Detach)} is called.");
 
-        if (notify) OnDetached?.Invoke(AttachedToIndex);
+        var triggerIndex = AttachedToIndex;
         if (!silent) MasterAudio.PlaySound3DAndForget("CarBuilding", sourceTrans: transform, variationName: "disassemble");
         AttachedToCollider.enabled = true;
         AttachedToIndex = -1;
@@ -60,6 +60,7 @@ public abstract class Attachable : Interactable
         transform.SetParent(null);
         tag = cachedTag;
         cachedTag = null;
+        if (notify) OnDetached?.Invoke(triggerIndex);
     }
 
     protected virtual void Reset() => layerMask = 1 << 19;

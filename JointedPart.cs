@@ -31,7 +31,7 @@ public abstract class JointedPart<TJoint> : Attachable
 
     protected virtual void OnJointBreak(float breakForce)
     {
-        OnJointBroken?.Invoke(AttachedToIndex, breakForce);
         base.Detach(false, invokeOnDetachWhenBroken);
+        OnJointBroken?.Invoke(AttachedToIndex, breakForce);
     }
 }
