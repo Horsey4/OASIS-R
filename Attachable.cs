@@ -10,6 +10,7 @@ public abstract class Attachable : Interactable
     public event AttachmentCallback OnAttached;
     public event AttachmentCallback OnDetached;
     public Collider[] triggers;
+    public Fastener[] fasteners;
     public bool silent;
     private string cachedTag;
     private int inTriggerIndex;
@@ -19,6 +20,8 @@ public abstract class Attachable : Interactable
     public bool IsAttached => AttachedToIndex >= 0;
 
     public int AttachedToIndex { get; private set; }
+
+    public int Tightness { get; private set; }
 
     public void Attach() => Attach(0, true, true);
 
@@ -39,6 +42,7 @@ public abstract class Attachable : Interactable
         if (!silent) MasterAudio.PlaySound3DAndForget("CarBuilding", sourceTrans: transform, variationName: "assemble");
         AttachedToIndex = triggerIndex;
         AttachedToCollider.enabled = false;
+        foreach (var fastener in fasteners) fastener.gameObject.SetActive(true);
 
         transform.SetParent(AttachedToCollider.transform);
         transform.localPosition = Vector3.zero;
@@ -56,6 +60,11 @@ public abstract class Attachable : Interactable
         if (!silent) MasterAudio.PlaySound3DAndForget("CarBuilding", sourceTrans: transform, variationName: "disassemble");
         AttachedToCollider.enabled = true;
         AttachedToIndex = -1;
+        foreach (var fastener in fasteners)
+        {
+            fastener.Tightness = 0;
+            fastener.gameObject.SetActive(false);
+        }
 
         transform.SetParent(null);
         tag = cachedTag;
@@ -64,6 +73,17 @@ public abstract class Attachable : Interactable
     }
 
     protected virtual void Reset() => layerMask = 1 << 19;
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        foreach (var fastener in fasteners)
+        {
+            fastener.gameObject.SetActive(false);
+            fastener.OnTightnessChanged += FastenerTightnessChanged;
+        }
+    }
 
     protected virtual void LateUpdate()
     {
@@ -80,7 +100,7 @@ public abstract class Attachable : Interactable
 
     protected override void OnCursorOver()
     {
-        if (!IsAttached) return;
+        if (!IsAttached || Tightness > 0) return;
 
         if (Input.GetMouseButtonDown(1))
         {
@@ -112,4 +132,6 @@ public abstract class Attachable : Interactable
         inTriggerIndex = -1;
         CursorGUI.Assemble = false;
     }
+
+    private void FastenerTightnessChanged(int deltaTightness) => Tightness += deltaTightness;
 }
