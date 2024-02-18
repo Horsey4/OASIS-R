@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace OASIS;
 
-public abstract class Threadable : Fastener
+public abstract class Screwable : Fastener
 {
     public Vector3 positionStep;
     public Vector3 rotationStep;
