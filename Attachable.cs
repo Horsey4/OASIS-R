@@ -62,7 +62,7 @@ public abstract class Attachable : Interactable
         AttachedToIndex = -1;
         foreach (var fastener in fasteners)
         {
-            fastener.Tightness = 0;
+            fastener.SetTightness(0);
             fastener.gameObject.SetActive(false);
         }
 

@@ -8,19 +8,19 @@ public abstract class Fastener : Interactable
 {
     public event TightnessChangedCallback OnTightnessChanged;
     public int maxTightness;
-    private int tightness;
 
-    public virtual int Tightness
+    public int Tightness { get; private set; }
+
+    public void SetTightness(int value) => SetTightness(value, true);
+
+    public virtual void SetTightness(int value, bool notify)
     {
-        get => tightness;
-        set
-        {
-            if (value < 0 || value > maxTightness) throw new ArgumentOutOfRangeException(nameof(value),
-                "Tightness must be greater than or equal to zero and less than or equal to the maximum tightness");
+        if (value < 0 || value > maxTightness) throw new ArgumentOutOfRangeException(nameof(value),
+            "Tightness must be greater than or equal to zero and less than or equal to the maximum tightness");
+        if (Tightness == value) return;
 
-            var deltaTightness = value - tightness;
-            tightness = value;
-            OnTightnessChanged?.Invoke(deltaTightness);
-        }
+        var deltaTightness = value - Tightness;
+        Tightness = value;
+        if (notify) OnTightnessChanged?.Invoke(deltaTightness);
     }
 }

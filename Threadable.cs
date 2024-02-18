@@ -7,21 +7,29 @@ public abstract class Threadable : Fastener
 {
     public Vector3 positionStep;
     public Vector3 rotationStep;
+    public bool silent;
 
     public bool IsOnCooldown { get; private set; }
 
-    public override int Tightness
+    public override void SetTightness(int value, bool notify)
     {
-        set
-        {
-            var deltaTightness = value - Tightness;
-            base.Tightness = value;
-            transform.localPosition += transform.localRotation * positionStep * deltaTightness;
-            transform.localRotation *= Quaternion.Euler(rotationStep * deltaTightness);
-        }
+        var deltaTightness = value - Tightness;
+        base.SetTightness(value, notify);
+
+        transform.localPosition += transform.localRotation * positionStep * deltaTightness;
+        transform.localRotation *= Quaternion.Euler(rotationStep * deltaTightness);
     }
 
-    protected void StartCooldown(float seconds) => StartCoroutine(Cooldown(seconds));
+    protected void Screw(int direction, float cooldownSeconds)
+    {
+        if (IsOnCooldown) return;
+        var newTightness = Tightness + direction;
+        if (newTightness < 0 || newTightness > maxTightness) return;
+
+        SetTightness(newTightness);
+        if (!silent) MasterAudio.PlaySound3DAndForget("CarBuilding", sourceTrans: transform, variationName: "bolt_screw");
+        StartCoroutine(ScrewCooldown(cooldownSeconds));
+    }
 
     protected virtual void Reset() => maxTightness = 8;
 
@@ -33,7 +41,7 @@ public abstract class Threadable : Fastener
         transform.localRotation *= Quaternion.Euler(rotationStep * -maxTightness);
     }
 
-    private IEnumerator Cooldown(float seconds)
+    private IEnumerator ScrewCooldown(float seconds)
     {
         IsOnCooldown = true;
         yield return new WaitForSeconds(seconds);
