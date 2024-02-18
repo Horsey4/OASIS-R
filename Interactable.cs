@@ -21,7 +21,7 @@ public abstract class Interactable : MonoBehaviour
 
     protected virtual void Update()
     {
-        if (Physics.Raycast(playerCamera.position, playerCamera.forward, out var hit, maxInteractionDistance, layerMask) && hit.transform == transform)
+        if (Physics.Raycast(playerCamera.position, playerCamera.forward, out var hit, maxInteractionDistance, layerMask) && hit.collider.gameObject == gameObject)
         {
             if (!IsMouseOver)
             {
