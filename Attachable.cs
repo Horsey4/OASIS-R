@@ -9,17 +9,17 @@ public abstract class Attachable : Interactable
 {
     public event AttachmentCallback OnAttached;
     public event AttachmentCallback OnDetached;
-    public Collider[] triggers;
-    public Fastener[] fasteners;
+    public Collider[] triggers = [];
+    public Fastener[] fasteners = [];
     public bool silent;
     private string cachedTag;
-    private int inTriggerIndex;
+    private int inTriggerIndex = -1;
 
     public Collider AttachedToCollider => IsAttached ? triggers[AttachedToIndex] : null;
 
     public bool IsAttached => AttachedToIndex >= 0;
 
-    public int AttachedToIndex { get; private set; }
+    public int AttachedToIndex { get; private set; } = -1;
 
     public int Tightness { get; private set; }
 
@@ -87,7 +87,7 @@ public abstract class Attachable : Interactable
 
     protected virtual void LateUpdate()
     {
-        if (IsAttached || inTriggerIndex <= 0) return;
+        if (IsAttached || inTriggerIndex < 0) return;
 
         if (Input.GetMouseButtonDown(0))
         {
