@@ -7,7 +7,7 @@ namespace OASIS;
 
 public class Bolt : Screwable
 {
-    public float size = 1.0f;
+    public float size = 1;
     public bool canUseRatchet = true;
 #if Editor
     protected override void Reset()

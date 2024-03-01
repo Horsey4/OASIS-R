@@ -6,7 +6,7 @@ namespace OASIS;
 public abstract class Interactable : MonoBehaviour
 {
     public LayerMask layerMask = ~(1 << 2);
-    public float maxInteractionDistance = 1.0f;
+    public float maxInteractionDistance = 1;
     private protected static Transform playerCamera;
 
     public bool IsMouseOver { get; private set; }
