@@ -24,14 +24,15 @@ public abstract class JointedPart<TJoint> : Attachable
     {
         base.Detach(silent, notify);
 
-        Destroy(Joint);
+        if (Joint != null) Destroy(Joint);
     }
 
     protected virtual void InitJoint() => Joint.connectedBody = transform.parent.GetComponentInParent<Rigidbody>();
 
     protected virtual void OnJointBreak(float breakForce)
     {
-        base.Detach(false, invokeOnDetachWhenBroken);
-        OnJointBroken?.Invoke(AttachedToIndex, breakForce);
+        var triggerIndex = AttachedToIndex;
+        Detach(false, invokeOnDetachWhenBroken);
+        OnJointBroken?.Invoke(triggerIndex, breakForce);
     }
 }
