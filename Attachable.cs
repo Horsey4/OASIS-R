@@ -7,6 +7,7 @@ public delegate void AttachmentCallback(int triggerIndex);
 
 public abstract class Attachable : Interactable
 {
+    public event TightnessChangedCallback OnTightnessChanged;
     public event AttachmentCallback OnAttached;
     public event AttachmentCallback OnDetached;
     public Collider[] triggers = [];
@@ -134,6 +135,10 @@ public abstract class Attachable : Interactable
         CursorGUI.Assemble = false;
     }
 
-    private void FastenerTightnessChanged(int deltaTightness) => Tightness += deltaTightness;
 #endif
+    protected virtual void FastenerTightnessChanged(int deltaTightness)
+    {
+        Tightness += deltaTightness;
+        OnTightnessChanged?.Invoke(deltaTightness);
+    }
 }
