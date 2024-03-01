@@ -39,4 +39,6 @@ public static class CursorGUI
         get => guiInteraction.Value;
         set => guiInteraction.Value = value;
     }
+
+    public static void ClearInteraction() => Interaction = "";
 }
