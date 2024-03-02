@@ -9,7 +9,7 @@ public abstract class Interactable : MonoBehaviour
     public float maxInteractionDistance = 1;
     private protected static Transform playerCamera;
 
-    public bool IsMouseOver { get; private set; }
+    public bool IsCursorOver { get; private set; }
 
     protected virtual void OnCursorEnter() { }
 
@@ -23,16 +23,16 @@ public abstract class Interactable : MonoBehaviour
     {
         if (Physics.Raycast(playerCamera.position, playerCamera.forward, out var hit, maxInteractionDistance, layerMask) && hit.collider.gameObject == gameObject)
         {
-            if (!IsMouseOver)
+            if (!IsCursorOver)
             {
-                IsMouseOver = true;
+                IsCursorOver = true;
                 OnCursorEnter();
             }
             OnCursorOver();
         }
-        else if (IsMouseOver)
+        else if (IsCursorOver)
         {
-            IsMouseOver = false;
+            IsCursorOver = false;
             OnCursorExit();
         }
     }
