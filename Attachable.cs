@@ -92,9 +92,9 @@ public abstract class Attachable : Interactable
 
         if (Input.GetMouseButtonDown(0))
         {
+            CursorGUI.Assemble = false;
             Attach(inTriggerIndex, silent);
             inTriggerIndex = -1;
-            CursorGUI.Assemble = false;
         }
         else CursorGUI.Assemble = true;
     }
@@ -105,17 +105,15 @@ public abstract class Attachable : Interactable
 
         if (Input.GetMouseButtonDown(1))
         {
-            Detach(silent);
             CursorGUI.Disassemble = false;
+            Detach(silent);
         }
         else CursorGUI.Disassemble = true;
     }
 
     protected override void OnCursorExit()
     {
-        if (!IsAttached) return;
-
-        CursorGUI.Disassemble = false;
+        if (IsAttached) CursorGUI.Disassemble = false;
     }
 
     protected virtual void OnTriggerEnter(Collider trigger)
@@ -137,6 +135,7 @@ public abstract class Attachable : Interactable
     protected virtual void FastenerTightnessChanged(int deltaTightness)
     {
         Tightness += deltaTightness;
+        if (Tightness == deltaTightness) CursorGUI.Disassemble = false;
         OnTightnessChanged?.Invoke(deltaTightness);
     }
 }
