@@ -9,7 +9,16 @@ public class Bolt : Screwable
 {
     public float size = 1;
     public bool canUseRatchet = true;
-#if Editor
+#if !Editor
+    private static readonly FsmFloat wrenchSize = FsmVariables.GlobalVariables.FindFsmFloat("ToolWrenchSize");
+    private static readonly FsmBool usingRatchet = FsmVariables.GlobalVariables.FindFsmBool("PlayerHasRatchet");
+    private static Material highlightMaterial;
+    private static FsmBool ratchetSwitch;
+    private bool isHighlighted;
+    private Renderer renderer;
+#endif
+    public Material MaterialCache { get; set; }
+
     protected override void Reset()
     {
         base.Reset();
@@ -18,16 +27,7 @@ public class Bolt : Screwable
         positionStep = new(0, 0, -0.0025f);
         rotationStep = new(0, 0, 45);
     }
-#else
-    private static readonly FsmFloat wrenchSize = FsmVariables.GlobalVariables.FindFsmFloat("ToolWrenchSize");
-    private static readonly FsmBool usingRatchet = FsmVariables.GlobalVariables.FindFsmBool("PlayerHasRatchet");
-    private static Material highlightMaterial;
-    private static FsmBool ratchetSwitch;
-    private bool isHighlighted;
-    private Renderer renderer;
-
-    public Material MaterialCache { get; set; }
-
+#if !Editor
     protected override void Awake()
     {
         base.Awake();

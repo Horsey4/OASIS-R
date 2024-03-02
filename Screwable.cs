@@ -8,9 +8,7 @@ public abstract class Screwable : Fastener
     public Vector3 positionStep;
     public Vector3 rotationStep;
     public bool silent;
-#if Editor
-    protected virtual void Reset() => maxTightness = 8;
-#endif
+
     public bool IsOnCooldown { get; private set; }
 
     public override void SetTightness(int value, bool notify)
@@ -32,6 +30,8 @@ public abstract class Screwable : Fastener
         if (!silent) MasterAudio.PlaySound3DAndForget("CarBuilding", sourceTrans: transform, variationName: "bolt_screw");
         StartCoroutine(ScrewCooldown(cooldownSeconds));
     }
+
+    protected virtual void Reset() => maxTightness = 8;
 
     protected override void Awake()
     {

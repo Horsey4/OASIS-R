@@ -13,9 +13,6 @@ public abstract class Attachable : Interactable
     public Collider[] triggers = [];
     public Fastener[] fasteners = [];
     public bool silent;
-#if Editor
-    protected virtual void Reset() => layerMask = 1 << 19;
-#else
     private string cachedTag;
     private int inTriggerIndex = -1;
 
@@ -76,6 +73,8 @@ public abstract class Attachable : Interactable
         if (notify) OnDetached?.Invoke(triggerIndex);
     }
 
+    protected virtual void Reset() => layerMask = 1 << 19;
+
     protected override void Awake()
     {
         base.Awake();
@@ -135,7 +134,6 @@ public abstract class Attachable : Interactable
         CursorGUI.Assemble = false;
     }
 
-#endif
     protected virtual void FastenerTightnessChanged(int deltaTightness)
     {
         Tightness += deltaTightness;
