@@ -12,7 +12,7 @@ public class Bolt : Screwable
 #if !Editor
     private static readonly FsmFloat wrenchSize = FsmVariables.GlobalVariables.FindFsmFloat("ToolWrenchSize");
     private static readonly FsmBool usingRatchet = FsmVariables.GlobalVariables.FindFsmBool("PlayerHasRatchet");
-    private static Transform spanner;
+    private static GameObject spanner;
     private static Material highlightMaterial;
     private static FsmBool ratchetSwitch;
     private bool isHighlighted;
@@ -35,9 +35,9 @@ public class Bolt : Screwable
 
         if (spanner == null)
         {
-            spanner = playerCamera.Find("2Spanner");
-            var boltCheckFsm = spanner.Find("Raycast").GetComponents<PlayMakerFSM>()[1].Fsm;
-            var ratchetSwitchFsm = spanner.Find("Pivot/Ratchet").GetComponent<PlayMakerFSM>().Fsm;
+            spanner = playerCamera.Find("2Spanner").gameObject;
+            var boltCheckFsm = spanner.transform.Find("Raycast").GetComponents<PlayMakerFSM>()[1].Fsm;
+            var ratchetSwitchFsm = spanner.transform.Find("Pivot/Ratchet").GetComponent<PlayMakerFSM>().Fsm;
             boltCheckFsm.InitData();
 
             highlightMaterial = ((SetMaterial)boltCheckFsm.States[2].Actions[1]).material.Value;
@@ -47,7 +47,7 @@ public class Bolt : Screwable
 
     protected override void OnCursorOver()
     {
-        if (wrenchSize.Value == size && (!usingRatchet.Value || canUseRatchet))
+        if (wrenchSize.Value == size && (!usingRatchet.Value || canUseRatchet) && spanner.activeSelf)
         {
             if (!isHighlighted)
             {
