@@ -12,6 +12,7 @@ public class Bolt : Screwable
 #if !Editor
     private static readonly FsmFloat wrenchSize = FsmVariables.GlobalVariables.FindFsmFloat("ToolWrenchSize");
     private static readonly FsmBool usingRatchet = FsmVariables.GlobalVariables.FindFsmBool("PlayerHasRatchet");
+    private static Transform spanner;
     private static Material highlightMaterial;
     private static FsmBool ratchetSwitch;
     private bool isHighlighted;
@@ -32,15 +33,15 @@ public class Bolt : Screwable
     {
         base.Awake();
 
-        if (highlightMaterial == null)
+        if (spanner == null)
         {
-            var spanner = playerCamera.Find("2Spanner");
-            var boltCheckFsm = spanner.Find("Raycast").GetComponents<PlayMakerFSM>()[1];
-            var ratchetSwitchFsm = spanner.Find("Pivot/Ratchet").GetComponent<PlayMakerFSM>();
-            boltCheckFsm.Fsm.InitData();
+            spanner = playerCamera.Find("2Spanner");
+            var boltCheckFsm = spanner.Find("Raycast").GetComponents<PlayMakerFSM>()[1].Fsm;
+            var ratchetSwitchFsm = spanner.Find("Pivot/Ratchet").GetComponent<PlayMakerFSM>().Fsm;
+            boltCheckFsm.InitData();
 
-            highlightMaterial = ((SetMaterial)boltCheckFsm.FsmStates[2].Actions[1]).material.Value;
-            ratchetSwitch = ratchetSwitchFsm.FsmVariables.FindFsmBool("Switch");
+            highlightMaterial = ((SetMaterial)boltCheckFsm.States[2].Actions[1]).material.Value;
+            ratchetSwitch = ratchetSwitchFsm.Variables.FindFsmBool("Switch");
         }
     }
 
@@ -51,8 +52,8 @@ public class Bolt : Screwable
             if (!isHighlighted)
             {
                 isHighlighted = true;
-                renderer ??= GetComponent<Renderer>();
-                if (renderer == null) throw new InvalidOperationException("Bolt has no renderer.");
+                if (renderer == null && (renderer = GetComponent<Renderer>()) == null)
+                    throw new InvalidOperationException("Bolt has no renderer.");
 
                 MaterialCache = renderer.material;
                 renderer.material = highlightMaterial;

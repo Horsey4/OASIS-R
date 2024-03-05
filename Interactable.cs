@@ -17,7 +17,10 @@ public abstract class Interactable : MonoBehaviour
 
     protected virtual void OnCursorExit() { }
 
-    protected virtual void Awake() => playerCamera ??= GameObject.Find("PLAYER/Pivot/AnimPivot/Camera/FPSCamera").transform;
+    protected virtual void Awake()
+    {
+        if (playerCamera == null) playerCamera = GameObject.Find("PLAYER/Pivot/AnimPivot/Camera/FPSCamera").transform;
+    }
 
     protected virtual void Update()
     {

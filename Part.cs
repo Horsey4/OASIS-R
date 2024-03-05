@@ -34,8 +34,8 @@ public class Part : Attachable
 
     public override void Attach(int triggerIndex, bool notify, bool silent)
     {
-        rigidbody ??= GetComponent<Rigidbody>();
-        if (rigidbody == null) throw new InvalidOperationException("Part has no rigidbody.");
+        if (rigidbody == null && (rigidbody = GetComponent<Rigidbody>()) == null)
+            throw new InvalidOperationException("Part has no rigidbody.");
         base.Attach(triggerIndex, notify, silent);
 
         CachedRigidbody = new(rigidbody);
