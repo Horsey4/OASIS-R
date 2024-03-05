@@ -60,8 +60,8 @@ public class Bolt : Screwable
             }
             if (Input.mouseScrollDelta.y == 0) return;
 
-            if (usingRatchet.Value) Screw(ratchetSwitch.Value ? 1 : -1, 0.08f);
-            else Screw(Math.Sign(Input.mouseScrollDelta.y), 0.28f);
+            if (usingRatchet.Value) Screw(ratchetSwitch.Value, 0.08f);
+            else Screw(Input.mouseScrollDelta.y > 0, 0.28f);
         }
         else UnHighlight();
     }

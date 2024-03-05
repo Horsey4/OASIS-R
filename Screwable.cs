@@ -20,10 +20,10 @@ public abstract class Screwable : Fastener
         transform.localRotation *= Quaternion.Euler(rotationStep * deltaTightness);
     }
 
-    protected void Screw(int direction, float cooldownSeconds)
+    protected void Screw(bool tighten, float cooldownSeconds)
     {
         if (IsOnCooldown) return;
-        var newTightness = Tightness + direction;
+        var newTightness = Tightness + (tighten ? 1 : -1);
         if (newTightness < 0 || newTightness > maxTightness) return;
 
         SetTightness(newTightness);

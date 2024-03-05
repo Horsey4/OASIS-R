@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace OASIS;
 
@@ -12,7 +11,7 @@ public class HandScrew : Screwable
         CursorGUI.Use = true;
         if (Input.mouseScrollDelta.y == 0) return;
 
-        Screw(Math.Sign(Input.mouseScrollDelta.y), screwCooldown);
+        Screw(Input.mouseScrollDelta.y > 0, screwCooldown);
     }
 
     protected override void OnCursorExit() => CursorGUI.Use = false;
