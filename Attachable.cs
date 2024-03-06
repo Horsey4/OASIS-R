@@ -24,17 +24,13 @@ public abstract class Attachable : Interactable
 
     public int Tightness { get; private set; }
 
-    public void Attach() => Attach(0, true, true);
+    public void Attach() => Attach(0, true);
 
-    public void Attach(int triggerIndex) => Attach(triggerIndex, true, true);
+    public void Attach(int triggerIndex) => Attach(triggerIndex, true);
 
-    public void Attach(int triggerIndex, bool silent) => Attach(triggerIndex, silent, true);
+    public void Detach() => Detach(true);
 
-    public void Detach() => Detach(true, true);
-
-    public void Detach(bool silent) => Detach(silent, true);
-
-    public virtual void Attach(int triggerIndex, bool silent, bool notify)
+    public virtual void Attach(int triggerIndex, bool silent)
     {
         if (IsAttached) throw new InvalidOperationException($"Object must be detached before {nameof(Attach)} is called.");
         if (triggerIndex < 0 || triggerIndex >= triggers.Length) throw new ArgumentOutOfRangeException(nameof(triggerIndex),
@@ -50,10 +46,10 @@ public abstract class Attachable : Interactable
         transform.localRotation = Quaternion.identity;
         cachedTag = (tag == "Untagged") ? "PART" : tag;
         tag = "Untagged";
-        if (notify) OnAttached?.Invoke(triggerIndex);
+        OnAttached?.Invoke(triggerIndex);
     }
 
-    public virtual void Detach(bool silent, bool notify)
+    public virtual void Detach(bool silent)
     {
         if (!IsAttached) throw new InvalidOperationException($"Object must be attached before {nameof(Detach)} is called.");
 
@@ -70,7 +66,14 @@ public abstract class Attachable : Interactable
         transform.SetParent(null);
         tag = cachedTag;
         cachedTag = null;
-        if (notify) OnDetached?.Invoke(triggerIndex);
+        OnDetached?.Invoke(triggerIndex);
+    }
+
+    protected virtual void FastenerTightnessChanged(int deltaTightness)
+    {
+        Tightness += deltaTightness;
+        if (Tightness == deltaTightness) CursorGUI.Disassemble = false;
+        OnTightnessChanged?.Invoke(deltaTightness);
     }
 
     protected virtual void Reset() => layerMask = 1 << 19;
@@ -130,12 +133,5 @@ public abstract class Attachable : Interactable
 
         inTriggerIndex = -1;
         CursorGUI.Assemble = false;
-    }
-
-    protected virtual void FastenerTightnessChanged(int deltaTightness)
-    {
-        Tightness += deltaTightness;
-        if (Tightness == deltaTightness) CursorGUI.Disassemble = false;
-        OnTightnessChanged?.Invoke(deltaTightness);
     }
 }

@@ -8,21 +8,20 @@ public abstract class JointedPart<TJoint> : Attachable
     where TJoint : Joint
 {
     public event JointBrokenCallback OnJointBroken;
-    public bool invokeOnDetachWhenBroken = true;
 
     public TJoint Joint { get; private set; }
 
-    public override void Attach(int triggerIndex, bool silent, bool notify)
+    public override void Attach(int triggerIndex, bool silent)
     {
-        base.Attach(triggerIndex, silent, notify);
+        base.Attach(triggerIndex, silent);
 
         Joint = gameObject.AddComponent<TJoint>();
         InitJoint();
     }
 
-    public override void Detach(bool silent, bool notify)
+    public override void Detach(bool silent)
     {
-        base.Detach(silent, notify);
+        base.Detach(silent);
 
         if (Joint != null) Destroy(Joint);
     }
@@ -32,7 +31,7 @@ public abstract class JointedPart<TJoint> : Attachable
     protected virtual void OnJointBreak(float breakForce)
     {
         var triggerIndex = AttachedToIndex;
-        Detach(false, invokeOnDetachWhenBroken);
+        Detach(false);
         OnJointBroken?.Invoke(triggerIndex, breakForce);
     }
 }

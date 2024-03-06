@@ -32,19 +32,19 @@ public class Part : Attachable
 
     public RigidbodyInfo CachedRigidbody { get; private set; }
 
-    public override void Attach(int triggerIndex, bool notify, bool silent)
+    public override void Attach(int triggerIndex, bool silent)
     {
         if (rigidbody == null && (rigidbody = GetComponent<Rigidbody>()) == null)
             throw new InvalidOperationException("Part has no rigidbody.");
-        base.Attach(triggerIndex, notify, silent);
+        base.Attach(triggerIndex, silent);
 
         CachedRigidbody = new(rigidbody);
         Destroy(rigidbody);
     }
 
-    public override void Detach(bool notify, bool silent)
+    public override void Detach(bool silent)
     {
-        base.Detach(notify, silent);
+        base.Detach(silent);
 
         rigidbody = gameObject.AddComponent<Rigidbody>();
         CachedRigidbody.ApplyTo(rigidbody);

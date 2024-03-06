@@ -11,10 +11,10 @@ public abstract class Screwable : Fastener
 
     public bool IsOnCooldown { get; private set; }
 
-    public override void SetTightness(int value, bool notify)
+    public override void SetTightness(int value)
     {
         var deltaTightness = value - Tightness;
-        base.SetTightness(value, notify);
+        base.SetTightness(value);
 
         transform.localPosition += transform.localRotation * positionStep * deltaTightness;
         transform.localRotation *= Quaternion.Euler(rotationStep * deltaTightness);
