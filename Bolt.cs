@@ -79,5 +79,11 @@ public class Bolt : Screwable
             MaterialCache = null;
         }
     }
+#else
+    protected override void OnCursorOver() { }
+
+    protected override void OnCursorExit() { }
+
+    protected virtual void OnDisable() { }
 #endif
 }

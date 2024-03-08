@@ -4,17 +4,7 @@ namespace OASIS;
 
 public static class CursorGUI
 {
-#if Editor
-    public static bool Assemble { get; set; }
-
-    public static bool Buy { get; set; }
-
-    public static bool Disassemble { get; set; }
-
-    public static bool Use { get; set; }
-
-    public static string Interaction { get; set; }
-#else
+#if !Editor
     private static readonly FsmBool guiAssemble = FsmVariables.GlobalVariables.FindFsmBool("GUIassemble");
     private static readonly FsmBool guiBuy = FsmVariables.GlobalVariables.FindFsmBool("GUIbuy");
     private static readonly FsmBool guiDisassemble = FsmVariables.GlobalVariables.FindFsmBool("GUIdisassemble");
@@ -50,6 +40,16 @@ public static class CursorGUI
         get => guiInteraction.Value;
         set => guiInteraction.Value = value;
     }
+#else
+    public static bool Assemble { get; set; }
+
+    public static bool Buy { get; set; }
+
+    public static bool Disassemble { get; set; }
+
+    public static bool Use { get; set; }
+
+    public static string Interaction { get; set; }
 #endif
     public static void ClearInteraction() => Interaction = "";
 }
