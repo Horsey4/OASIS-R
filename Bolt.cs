@@ -9,6 +9,7 @@ public class Bolt : Screwable
 {
     public float size = 1;
     public bool canUseRatchet = true;
+    public bool silent;
 #if !Editor
     private static readonly FsmFloat wrenchSize = FsmVariables.GlobalVariables.FindFsmFloat("ToolWrenchSize");
     private static readonly FsmBool usingRatchet = FsmVariables.GlobalVariables.FindFsmBool("PlayerHasRatchet");
@@ -60,8 +61,8 @@ public class Bolt : Screwable
             }
             if (Input.mouseScrollDelta.y == 0) return;
 
-            if (usingRatchet.Value) Screw(ratchetSwitch.Value, 0.08f);
-            else Screw(Input.mouseScrollDelta.y > 0, 0.28f);
+            if (usingRatchet.Value) Screw(ratchetSwitch.Value, 0.08f, silent);
+            else Screw(Input.mouseScrollDelta.y > 0, 0.28f, silent);
         }
         else UnHighlight();
     }

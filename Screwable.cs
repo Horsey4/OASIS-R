@@ -7,7 +7,6 @@ public abstract class Screwable : Fastener
 {
     public Vector3 positionStep;
     public Vector3 rotationStep;
-    public bool silent;
 
     public bool IsOnCooldown { get; private set; }
 
@@ -20,7 +19,7 @@ public abstract class Screwable : Fastener
         transform.localRotation *= Quaternion.Euler(rotationStep * deltaTightness);
     }
 
-    protected void Screw(bool tighten, float cooldownSeconds)
+    protected void Screw(bool tighten, float cooldownSeconds, bool silent)
     {
         if (IsOnCooldown) return;
         var newTightness = Tightness + (tighten ? 1 : -1);
