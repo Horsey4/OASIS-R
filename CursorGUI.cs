@@ -8,6 +8,8 @@ public static class CursorGUI
     private static readonly FsmBool guiAssemble = FsmVariables.GlobalVariables.FindFsmBool("GUIassemble");
     private static readonly FsmBool guiBuy = FsmVariables.GlobalVariables.FindFsmBool("GUIbuy");
     private static readonly FsmBool guiDisassemble = FsmVariables.GlobalVariables.FindFsmBool("GUIdisassemble");
+    private static readonly FsmBool guiDrive = FsmVariables.GlobalVariables.FindFsmBool("GUIdrive");
+    private static readonly FsmBool guiPassenger = FsmVariables.GlobalVariables.FindFsmBool("GUIpassenger");
     private static readonly FsmBool guiUse = FsmVariables.GlobalVariables.FindFsmBool("GUIuse");
     private static readonly FsmString guiInteraction = FsmVariables.GlobalVariables.FindFsmString("GUIinteraction");
 
@@ -29,6 +31,18 @@ public static class CursorGUI
         set => guiDisassemble.Value = value;
     }
 
+    public static bool Drive
+    {
+        get => guiDrive.Value;
+        set => guiDrive.Value = value;
+    }
+
+    public static bool Passenger
+    {
+        get => guiPassenger.Value;
+        set => guiPassenger.Value = value;
+    }
+
     public static bool Use
     {
         get => guiUse.Value;
@@ -40,6 +54,8 @@ public static class CursorGUI
         get => guiInteraction.Value;
         set => guiInteraction.Value = value;
     }
+
+    public static void ClearInteraction() => Interaction = "";
 #else
     public static bool Assemble { get; set; }
 
@@ -51,5 +67,4 @@ public static class CursorGUI
 
     public static string Interaction { get; set; }
 #endif
-    public static void ClearInteraction() => Interaction = "";
 }
