@@ -25,6 +25,8 @@ public abstract class Attachable : Interactable
 
     public void Attach() => Attach(0, true);
 
+    public void Attach(bool silent) => Attach(0, silent);
+
     public void Attach(int triggerIndex) => Attach(triggerIndex, true);
 
     public void Detach() => Detach(true);
