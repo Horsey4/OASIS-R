@@ -5,6 +5,9 @@ namespace OASIS;
 
 public delegate void AttachmentCallback(int triggerIndex);
 
+/// <summary>
+/// Provides functionality for parent-based attachment
+/// </summary>
 public abstract class Attachable : Interactable
 {
     public event TightnessChangedCallback OnTightnessChanged;
@@ -16,21 +19,62 @@ public abstract class Attachable : Interactable
     private string cachedTag;
     private int inTriggerIndex = -1;
 
+    /// <summary>
+    /// Returns the current parent trigger or <see langword="null"></see> if detached
+    /// </summary>
     public Collider AttachedToTrigger => IsAttached ? triggers[AttachedToIndex] : null;
+
+    /// <summary>
+    /// Returns <see langword="true"/> while attached to a trigger
+    /// </summary>
     public bool IsAttached => AttachedToIndex >= 0;
 
+    /// <summary>
+    /// The index of the current parent trigger or -1 if detached
+    /// </summary>
     public int AttachedToIndex { get; private set; } = -1;
 
+    /// <summary>
+    /// The sum of all fastener tightness stages
+    /// </summary>
     public int Tightness { get; private set; }
 
+    /// <summary>
+    /// Attaches to the parent trigger at index 0 without playing the assemble sound
+    /// </summary>
+    /// <exception cref="InvalidOperationException"></exception>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
     public void Attach() => Attach(0, true);
 
+    /// <summary>
+    /// Attaches to the parent trigger at index 0 and plays the assemble sound if <paramref name="silent"/> is <see langword="false"/>
+    /// </summary>
+    /// <param name="silent">If the assemble sound should be played or not</param>
+    /// <exception cref="InvalidOperationException"></exception>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
     public void Attach(bool silent) => Attach(0, silent);
 
+    /// <summary>
+    /// Attaches to the parent trigger at <paramref name="triggerIndex"/> without playing the assemble sound
+    /// </summary>
+    /// <param name="triggerIndex">The index of the trigger to attach to</param>
+    /// <exception cref="InvalidOperationException"></exception>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
     public void Attach(int triggerIndex) => Attach(triggerIndex, true);
 
+    /// <summary>
+    /// Detaches from any parent trigger without playing the disassemble sound
+    /// </summary>
+    /// <exception cref="InvalidOperationException"></exception>
     public void Detach() => Detach(true);
 
+    /// <summary>
+    /// Attaches to the parent trigger at <paramref name="triggerIndex"/> and plays the assemble sound if <paramref name="silent"/> is <see langword="false"/>
+    /// </summary>
+    /// <param name="triggerIndex">The index of the trigger to attach to</param>
+    /// <param name="silent">If the assemble sound should be played or not</param>
+    /// <exception cref="InvalidOperationException"></exception>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
     public virtual void Attach(int triggerIndex, bool silent)
     {
         if (IsAttached) throw new InvalidOperationException($"Object must be detached before {nameof(Attach)} is called.");
@@ -50,6 +94,11 @@ public abstract class Attachable : Interactable
         OnAttached?.Invoke(triggerIndex);
     }
 
+    /// <summary>
+    /// Detaches from any parent trigger and plays the disassemble sound if <paramref name="silent"/> is <see langword="false"/>
+    /// </summary>
+    /// <param name="silent">If the disassemble sound should be played or not</param>
+    /// <exception cref="InvalidOperationException"></exception>
     public virtual void Detach(bool silent)
     {
         if (!IsAttached) throw new InvalidOperationException($"Object must be attached before {nameof(Detach)} is called.");
@@ -70,6 +119,9 @@ public abstract class Attachable : Interactable
         OnDetached?.Invoke(triggerIndex);
     }
 
+    /// <summary>
+    /// Invoked by any fastener's tightness changed event
+    /// </summary>
     protected virtual void FastenerTightnessChanged(int deltaTightness)
     {
         Tightness += deltaTightness;
