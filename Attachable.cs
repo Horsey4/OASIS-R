@@ -16,8 +16,7 @@ public abstract class Attachable : Interactable
     private string cachedTag;
     private int inTriggerIndex = -1;
 
-    public Collider AttachedToCollider => IsAttached ? triggers[AttachedToIndex] : null;
-
+    public Collider AttachedToTrigger => IsAttached ? triggers[AttachedToIndex] : null;
     public bool IsAttached => AttachedToIndex >= 0;
 
     public int AttachedToIndex { get; private set; } = -1;
@@ -38,10 +37,10 @@ public abstract class Attachable : Interactable
 
         if (!silent) MasterAudio.PlaySound3DAndForget("CarBuilding", sourceTrans: transform, variationName: "assemble");
         AttachedToIndex = triggerIndex;
-        AttachedToCollider.enabled = false;
+        AttachedToTrigger.enabled = false;
         foreach (var fastener in fasteners) fastener.gameObject.SetActive(true);
 
-        transform.SetParent(AttachedToCollider.transform);
+        transform.SetParent(AttachedToTrigger.transform);
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
         cachedTag = (tag == "Untagged") ? "PART" : tag;
@@ -55,7 +54,7 @@ public abstract class Attachable : Interactable
 
         var triggerIndex = AttachedToIndex;
         if (!silent) MasterAudio.PlaySound3DAndForget("CarBuilding", sourceTrans: transform, variationName: "disassemble");
-        AttachedToCollider.enabled = true;
+        AttachedToTrigger.enabled = true;
         AttachedToIndex = -1;
         foreach (var fastener in fasteners)
         {
