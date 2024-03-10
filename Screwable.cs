@@ -19,15 +19,17 @@ public abstract class Screwable : Fastener
         transform.localRotation *= Quaternion.Euler(rotationStep * deltaTightness);
     }
 
-    protected void Screw(bool tighten, float cooldownSeconds, bool silent)
+    public bool Screw(bool tighten, float cooldownSeconds, bool silent)
     {
-        if (IsOnCooldown) return;
+        if (IsOnCooldown) return false;
         var newTightness = Tightness + (tighten ? 1 : -1);
-        if (newTightness < 0 || newTightness > maxTightness) return;
+        if (newTightness < 0 || newTightness > maxTightness) return false;
 
-        SetTightness(newTightness);
         if (!silent) MasterAudio.PlaySound3DAndForget("CarBuilding", sourceTrans: transform, variationName: "bolt_screw");
         StartCoroutine(ScrewCooldown(cooldownSeconds));
+        SetTightness(newTightness);
+
+        return true;
     }
 
     protected virtual void Reset() => maxTightness = 8;
