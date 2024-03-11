@@ -3,11 +3,17 @@ using UnityEngine;
 
 namespace OASIS;
 
+/// <summary>
+/// Provides functionality for fasteners that can be screwed or unscrewed
+/// </summary>
 public abstract class Screwable : Fastener
 {
     public Vector3 positionStep;
     public Vector3 rotationStep;
 
+    /// <summary>
+    /// Returns <see langword="true"/> if the screw cooldown is active
+    /// </summary>
     public bool IsOnCooldown { get; private set; }
 
     public override void SetTightness(int value)
@@ -19,6 +25,13 @@ public abstract class Screwable : Fastener
         transform.localRotation *= Quaternion.Euler(rotationStep * deltaTightness);
     }
 
+    /// <summary>
+    /// Increments or decrements the tightness stage if it is valid to do so
+    /// </summary>
+    /// <param name="tighten">If the tightness stage should be incremented or decremented</param>
+    /// <param name="cooldownSeconds">How long to wait before the method can succeed again</param>
+    /// <param name="silent">If the screw sound should be played or not</param>
+    /// <remarks>Returns <see langword="true"/> If the tightness stage was updated</remarks>
     public bool Screw(bool tighten, float cooldownSeconds, bool silent)
     {
         if (IsOnCooldown) return false;
