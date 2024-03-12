@@ -81,6 +81,8 @@ public class Bolt : Screwable
         }
     }
 #else
+    protected override void Awake() { }
+
     protected override void OnCursorOver() { }
 
     protected override void OnCursorExit() { }

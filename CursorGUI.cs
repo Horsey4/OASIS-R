@@ -96,5 +96,7 @@ public static class CursorGUI
     public static bool Use { get; set; }
 
     public static string Interaction { get; set; }
+
+    public static void ClearInteraction() { }
 #endif
 }
