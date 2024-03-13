@@ -19,7 +19,7 @@ public class Bolt : Screwable
     private bool isHighlighted;
     private Renderer renderer;
 #endif
-    public Material MaterialCache { get; set; }
+    public Material UnhighlightedMaterial { get; set; }
 
     protected override void Reset()
     {
@@ -56,7 +56,7 @@ public class Bolt : Screwable
                 if (renderer == null && (renderer = GetComponent<Renderer>()) == null)
                     throw new InvalidOperationException("Bolt has no renderer.");
 
-                MaterialCache = renderer.material;
+                UnhighlightedMaterial = renderer.material;
                 renderer.material = highlightMaterial;
             }
             if (Input.mouseScrollDelta.y == 0) return;
@@ -76,8 +76,8 @@ public class Bolt : Screwable
         if (isHighlighted)
         {
             isHighlighted = false;
-            renderer.material = MaterialCache;
-            MaterialCache = null;
+            renderer.material = UnhighlightedMaterial;
+            UnhighlightedMaterial = null;
         }
     }
 #else
