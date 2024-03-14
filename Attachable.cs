@@ -131,10 +131,8 @@ public abstract class Attachable : Interactable
 
     protected virtual void Reset() => layerMask = 1 << 19;
 
-    protected override void Awake()
+    protected virtual void Start()
     {
-        base.Awake();
-
         foreach (var fastener in fasteners)
         {
             fastener.gameObject.SetActive(false);
