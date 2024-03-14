@@ -3,6 +3,9 @@ using System;
 
 namespace OASIS;
 
+/// <summary>
+/// Saves and applies the properties of a <see cref="Rigidbody"/>
+/// </summary>
 public sealed class RigidbodyProperties
 {
     public float mass;
@@ -14,8 +17,15 @@ public sealed class RigidbodyProperties
     public CollisionDetectionMode collisionDetectionMode;
     public RigidbodyConstraints constraints;
 
+    /// <summary>
+    /// Creates an instance with unset values
+    /// </summary>
     public RigidbodyProperties() { }
 
+    /// <summary>
+    /// Creates an instance with the same properties as <paramref name="rigidbody"/>
+    /// </summary>
+    /// <param name="rigidbody">The rigidbody to copy properties from</param>
     public RigidbodyProperties(Rigidbody rigidbody)
     {
         mass = rigidbody.mass;
@@ -28,6 +38,10 @@ public sealed class RigidbodyProperties
         constraints = rigidbody.constraints;
     }
 
+    /// <summary>
+    /// Applies saved properties to <paramref name="rigidbody"/>
+    /// </summary>
+    /// <param name="rigidbody">The rigidbody to modify</param>
     public void ApplyTo(Rigidbody rigidbody)
     {
         rigidbody.mass = mass;
@@ -41,10 +55,16 @@ public sealed class RigidbodyProperties
     }
 }
 
+/// <summary>
+/// Emulates basic vanilla attachment by destroying and re-creating the <see cref="Rigidbody"/> component
+/// </summary>
 public class Part : Attachable
 {
     private Rigidbody rigidbody;
 
+    /// <summary>
+    /// Returns the properties to apply to the new rigidbody when detached or <see langword="null"/> if already detached
+    /// </summary>
     public RigidbodyProperties RigidbodyProperties { get; private set; }
 
     public override void Attach(int triggerIndex, bool silent)
